@@ -1,12 +1,21 @@
 from PyQt6.QtWidgets import QApplication,QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap, QIcon,QImageReader, QGuiApplication, QPalette, QBrush
 from PyQt6.QtCore import QTimer, Qt
+import configparser
 import os
 
 class ys(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        config = configparser.ConfigParser()
+        config.read('start_config.ini')
+        ys_ml = config.get('DEFAULT', 'ys_ml', fallback=None)  # 如果'ys_ml'不存在，返回None
+        ys_ml = ys_ml.strip('\'')  # 使用strip方法移除两边的单引号
+        if ys_ml == '':  # 如果ys_ml的值为空字符
+            print('x')  # 打印 'x'
+        else:  # 如果ys_ml的值不为空字符
+            print('y')  # 打印 'y'
 
         with open('config.ini', 'r') as file:
             for line in file:
