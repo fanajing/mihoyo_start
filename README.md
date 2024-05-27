@@ -1,5 +1,3 @@
 # mihoyo_start
 基于米哈游全游戏的聚合启动器_双服可用
-![img.png](img.png)
-
-测试11
+![img.png](image/img.png)
