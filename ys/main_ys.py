@@ -1,13 +1,22 @@
-from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton
-from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QTabWidget,QMessageBox, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout,QApplication, QFileDialog, QPushButton
 from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
-from PyQt6.QtCore import QTimer, Qt
-from PyQt6.QtCore import QSize, QCoreApplication
+from PyQt6.QtCore import QTimer, Qt,QByteArray,QSize, QCoreApplication
 import configparser
 import os
 import sys
 import base64
 import base64a
+from base64a import bg
+from base64a import cz
+base64_image = base64.b64decode(bg)
+config = configparser.ConfigParser()
+config.read('start_config.ini')
+ys_ml = config.get('DEFAULT', 'ys_ml')
+ys_config = os.path.join(ys_ml, 'config.ini')
+ys_config = ys_config.replace('\\', '/')
+ys_bg=os.path.join(ys_ml,'bg')
+ys_bg = ys_bg.replace('\\', '/')
+
 
 class ys(QWidget):
     def __init__(self, parent=None):
@@ -24,34 +33,43 @@ class ys(QWidget):
             pixmap.loadFromData(icon_data)  # 从数据加载Pixmap
 
             # 创建按钮
-            self.button = QPushButton('', self)  # 注意，按钮的文字为空
-            self.button.setStyleSheet(f"border:none;")  # 移除按钮的边框
-            self.button.move(800, 600)
-            self.button.clicked.connect(self.on_button_clicked)
+            self.chazhao = QPushButton('', self)  # 注意，按钮的文字为空
+            self.chazhao.setStyleSheet(f"border:none;")  # 移除按钮的边框
+            self.chazhao.move(800, 600)
+            self.chazhao.clicked.connect(self.on_button_clicked)
             # 设置按钮的大小为图片的大小
-            self.button.setFixedSize(pixmap.width(), pixmap.height())
+            self.chazhao.setFixedSize(pixmap.width(), pixmap.height())
 
             # 将图标设置为按钮的背景
-            self.button.setIcon(QIcon(pixmap))
-            self.button.setIconSize(QSize(pixmap.width(), pixmap.height()))  # 设置icon的大小
+            self.chazhao.setIcon(QIcon(pixmap))
+            self.chazhao.setIconSize(QSize(pixmap.width(), pixmap.height()))  # 设置icon的大小
 
         else:  # 如果ys_ml的值不为空字符
             print('y')  # 打印 'y'
+
+
         # 使用base64a.cz创建图标
 
+        if os.path.exists(ys_config):
+            with open(ys_config, 'r') as file:
+                for line in file:
+                    if 'game_dynamic_bg_name=' in line:
+                        game_dynamic_bg_name = line.split('=')[1].strip()
+                        break
 
-        with open('config.ini', 'r') as file:
-            for line in file:
-                if 'game_dynamic_bg_name=' in line:
-                    game_dynamic_bg_name = line.split('=')[1].strip()
-                    break
+            # 构建背景图像文件路径
+            bg = ys_bg + '/' + game_dynamic_bg_name
+            image_reader = QImageReader(bg)
+            image = image_reader.read()
+            pixmap = QPixmap.fromImage(image)
+        else:
+            data = base64_image
+            pixmap = QPixmap()
+            pixmap.loadFromData(QByteArray(data))
 
-        # 构建背景图像文件路径
-        bg = "bg/" + game_dynamic_bg_name
 
-        image_reader = QImageReader(bg)
-        image = image_reader.read()
-        pixmap = QPixmap(image)
+
+
 
         # 设置背景图片
         palette = QPalette()
@@ -66,7 +84,7 @@ class ys(QWidget):
         ]
         self.current_image = -1
 
-        self.image_label = QLabel("Image goes here", self)
+        self.image_label = QLabel("", self)
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.layout = QVBoxLayout()
@@ -99,7 +117,7 @@ class ys(QWidget):
         if file_dialog.exec():  # 如果用户选择了
             file_name = file_dialog.selectedFiles()[0]  # 获取选定文件的路径
             if os.path.basename(file_name) != 'YuanShen.exe':
-                print("请选择一个 yuanshen.exe 文件")
+                QMessageBox.warning(self, "错误", "请选择YuanShen.exe")
             else:
                 upper_directory = os.path.dirname(file_name)  # 获取文件的上一级目录
                 grandparent_directory = os.path.dirname(upper_directory)
@@ -108,6 +126,10 @@ class ys(QWidget):
                 # 打开文件并保存配置
                 with open('start_config.ini', 'w') as configfile:
                     config.write(configfile)
+
+                self.chazhao.hide()
+                
+
         else:
             print("用户取消选择")
 

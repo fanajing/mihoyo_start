@@ -8,28 +8,43 @@ from zzz.main_zzz import zzz  # 绝区零
 from bh3.main_bh3 import bh3  # 崩坏3
 from sz.sz import sz  # 设置
 import base64
+import configparser
 import os
 from base64a import bg
+
 app = QApplication([])
+
 base64_image = base64.b64decode(bg)
+config = configparser.ConfigParser()
+config.read('start_config.ini')
+ys_ml = config.get('DEFAULT', 'ys_ml')
+ys_config = os.path.join(ys_ml, 'config.ini')
+ys_config = ys_config.replace('\\', '/')
+ys_bg=os.path.join(ys_ml,'bg')
+ys_bg = ys_bg.replace('\\', '/')
+
 def on_tab_changed(index):
     if index == 0:  # 第一个选项卡
-        with open('config.ini', 'r') as file:
-            for line in file:
-                if 'game_dynamic_bg_name=' in line:
-                    game_dynamic_bg_name = line.split('=')[1].strip()
-                    break
+        if os.path.exists(ys_config):
+            with open(ys_config, 'r') as file:
+                for line in file:
+                    if 'game_dynamic_bg_name=' in line:
+                        game_dynamic_bg_name = line.split('=')[1].strip()
+                        break
 
-        # 构建背景图像文件路径
-        bg = "bg/" + game_dynamic_bg_name
-
-        image_reader = QImageReader(bg)
-        image = image_reader.read()
-        pixmap = QPixmap.fromImage(image)
+            # 构建背景图像文件路径
+            bg = ys_bg +'/'+ game_dynamic_bg_name
+            image_reader = QImageReader(bg)
+            image = image_reader.read()
+            pixmap = QPixmap.fromImage(image)
+        else:
+           data = base64_image
+           pixmap = QPixmap()
+           pixmap.loadFromData(QByteArray(data))
 
         # 控制 QTabWidget 显示在适当位置
         tabs.resize(pixmap.width(), pixmap.height())
-
+    
         # 设置背景图像
         palette = tabs.palette()
         palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
@@ -116,15 +131,16 @@ def on_tab_changed(index):
         tabs.setPalette(palette)
         tabs.setAutoFillBackground(True)
 
-if os.path.exists('config.ini'):
-    with open('config.ini', 'r') as file:
+
+if os.path.exists(ys_config):
+    with open(ys_config, 'r') as file:
         for line in file:
             if 'game_dynamic_bg_name=' in line:
                 game_dynamic_bg_name = line.split('=')[1].strip()
                 break
 
     # 构建背景图像文件路径
-    bg = "bg/" + game_dynamic_bg_name
+    bg = ys_bg +'/'+ game_dynamic_bg_name
 
     image_reader = QImageReader(bg)
     image = image_reader.read()
@@ -163,7 +179,7 @@ tabs.setAutoFillBackground(True)
 tabs.setFixedSize(pixmap.width(), pixmap.height())
 
 tab_bar = tabs.tabBar()
-tabs.setStyleSheet("QTabWidget::pane { border: 0; } QTabBar::tab {background-color: rgba(0,0,0,50%);}")
+tabs.setStyleSheet("QTabWidget::pane { border: 0; } QTabBar::tab {background-color: rgba(0,0,0,30%);}")
 
 #原神
 label1 = QLabel()
@@ -200,7 +216,7 @@ sz = SZ.scaled(100, 100, Qt.AspectRatioMode.IgnoreAspectRatio)
 label5.setPixmap(sz)
 tab_bar.setTabButton(8, QTabBar.ButtonPosition.LeftSide, label5)
 
-# Set tab position to the right side
+
 tabs.setTabPosition(QTabWidget.TabPosition.East)
 # 获取屏幕宽度和高度
 screen = app.primaryScreen().geometry()
@@ -210,5 +226,5 @@ tabs.currentChanged.connect(on_tab_changed)
 tabs.setWindowTitle("米哈游启动器")
 tabs.setWindowIcon(QIcon('image/caoyuansu.ico'))
 tabs.show()
-
+tabs.setCurrentIndex(8)
 app.exec()
