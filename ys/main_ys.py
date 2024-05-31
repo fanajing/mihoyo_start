@@ -27,28 +27,43 @@ class ys(QWidget):
         config.read('start_config.ini')
         ys_ml = config.get('DEFAULT', 'ys_ml', fallback=None)  # 如果'ys_ml'不存在，返回None
         ys_ml = ys_ml.strip('\'')  # 使用strip方法移除两边的单引号
-        if ys_ml == '':  # 如果ys_ml的值为空字符
-            icon_data = base64.b64decode(base64a.cz)  # 使用cz解码base64
-            pixmap = QPixmap()
-            pixmap.loadFromData(icon_data)  # 从数据加载Pixmap
 
-            # 创建按钮
-            self.chazhao = QPushButton('', self)  # 注意，按钮的文字为空
-            self.chazhao.setStyleSheet(f"border:none;")  # 移除按钮的边框
-            self.chazhao.move(800, 600)
-            self.chazhao.clicked.connect(self.on_button_clicked)
-            # 设置按钮的大小为图片的大小
-            self.chazhao.setFixedSize(pixmap.width(), pixmap.height())
+        #官服
+        icon_data_guan = base64.b64decode(base64a.guan1)  # 使用guan1解码base64
+        pixmap_guan = QPixmap()
+        pixmap_guan.loadFromData(icon_data_guan)  # 从数据加载Pixmap
 
-            # 将图标设置为按钮的背景
-            self.chazhao.setIcon(QIcon(pixmap))
-            self.chazhao.setIconSize(QSize(pixmap.width(), pixmap.height()))  # 设置icon的大小
+        scaled_pixmap = pixmap_guan.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
+        self.guanfu = QPushButton('', self)  # 注意，按钮的文字为空
+        self.guanfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
+        self.guanfu.move(750, 600)
+        self.guanfu.clicked.connect(self.on_button_clicked)
+        # 设置按钮的大小为图片的大小
+        self.guanfu.setIcon(QIcon(scaled_pixmap))
+        self.guanfu.setFixedSize(pixmap_guan.width(), pixmap_guan.height())
 
-        else:  # 如果ys_ml的值不为空字符
-            print('y')  # 打印 'y'
+        # 将图标设置为按钮的背景
+        self.guanfu.setIcon(QIcon(pixmap_guan))
+        self.guanfu.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
 
+        #b服
+        icon_data_b = base64.b64decode(base64a.b1)  # 使用guan1解码base64
+        pixmap_b = QPixmap()
+        pixmap_b.loadFromData(icon_data_b)  # 从数据加载Pixmap
 
-        # 使用base64a.cz创建图标
+        scaled_pixmap = pixmap_b.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
+        self.bfu = QPushButton('', self)  # 注意，按钮的文字为空
+        self.bfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
+        self.bfu.move(950, 600)
+        self.bfu.clicked.connect(self.on_button_clicked)
+        # 设置按钮的大小为图片的大小
+        self.bfu.setIcon(QIcon(scaled_pixmap))
+        self.bfu.setFixedSize(pixmap_b.width(), pixmap_b.height())
+
+        # 将图标设置为按钮的背景
+        self.bfu.setIcon(QIcon(pixmap_b))
+        self.bfu.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
+
 
         if os.path.exists(ys_config):
             with open(ys_config, 'r') as file:
@@ -103,33 +118,6 @@ class ys(QWidget):
         self.image_label.setGeometry(30, 210, 505, 285)
 
     def on_button_clicked(self):
-        # 首先创建 configparser.ConfigParser 实例
-        config = configparser.ConfigParser()
 
-        # 确认正确读取 start_config.ini 文件（或者你需要读取的文件名）
-        config.read('start_config.ini')
-
-        # 以下为原有代码
-        file_dialog = QFileDialog(self)  # 设置 ys 为 file_dialog 的父窗体
-        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)  # 设置为选择已存在的文件模式
-        file_dialog.setNameFilter("Executable files (*.exe)")  # 设置只显示 .exe 文件
-
-        if file_dialog.exec():  # 如果用户选择了
-            file_name = file_dialog.selectedFiles()[0]  # 获取选定文件的路径
-            if os.path.basename(file_name) != 'YuanShen.exe':
-                QMessageBox.warning(self, "错误", "请选择YuanShen.exe")
-            else:
-                upper_directory = os.path.dirname(file_name)  # 获取文件的上一级目录
-                grandparent_directory = os.path.dirname(upper_directory)
-                # 这里调用 set 方法更改配置项
-                config.set('DEFAULT', 'ys_ml', grandparent_directory)
-                # 打开文件并保存配置
-                with open('start_config.ini', 'w') as configfile:
-                    config.write(configfile)
-
-                self.chazhao.hide()
-                
-
-        else:
-            print("用户取消选择")
+        pass
 
