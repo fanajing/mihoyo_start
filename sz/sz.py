@@ -34,10 +34,10 @@ class sz(QWidget):
         config = configparser.ConfigParser()
         config.read('start_config.ini')
         default_text_ys = config.get('DEFAULT', 'ys_ml')
-        txt_input_ys = QLineEdit(self)
-        txt_input_ys.setGeometry(100, 140, 380, 30)  # 设置文本框的位置和大小
-        txt_input_ys.setText(default_text_ys)  # 设置默认值
-        txt_input_ys.setReadOnly(True)
+        self.txt_input_ys = QLineEdit(self)
+        self.txt_input_ys.setGeometry(100, 140, 380, 30)  # 设置文本框的位置和大小
+        self.txt_input_ys.setText(default_text_ys)  # 设置默认值
+        self.txt_input_ys.setReadOnly(True)
         icon_data = base64.b64decode(base64a.cz)  # 使用cz解码base64
         pixmap_cz = QPixmap()
         pixmap_cz.loadFromData(icon_data)  # 从数据加载Pixmap
@@ -67,10 +67,10 @@ class sz(QWidget):
         config = configparser.ConfigParser()
         config.read('start_config.ini')
         default_text_xqtd = config.get('DEFAULT', 'xqtd_ml')
-        txt_input_xqtd = QLineEdit(self)
-        txt_input_xqtd.setGeometry(100, 240, 380, 30)  # 设置文本框的位置和大小
-        txt_input_xqtd.setText(default_text_xqtd)  # 设置默认值
-        txt_input_xqtd.setReadOnly(True)
+        self.txt_input_xqtd = QLineEdit(self)
+        self.txt_input_xqtd.setGeometry(100, 240, 380, 30)  # 设置文本框的位置和大小
+        self.txt_input_xqtd.setText(default_text_xqtd)  # 设置默认值
+        self.txt_input_xqtd.setReadOnly(True)
         icon_data = base64.b64decode(base64a.cz)  # 使用cz解码base64
         pixmap_cz = QPixmap()
         pixmap_cz.loadFromData(icon_data)  # 从数据加载Pixmap
@@ -106,10 +106,10 @@ class sz(QWidget):
         config = configparser.ConfigParser()
         config.read('start_config.ini')
         default_text_zzz = config.get('DEFAULT', 'zzz_ml')
-        txt_input_zzz = QLineEdit(self)
-        txt_input_zzz.setGeometry(100, 340, 380, 30)  # 设置文本框的位置和大小
-        txt_input_zzz.setText(default_text_zzz)  # 设置默认值
-        txt_input_zzz.setReadOnly(True)
+        self.txt_input_zzz = QLineEdit(self)
+        self.txt_input_zzz.setGeometry(100, 340, 380, 30)  # 设置文本框的位置和大小
+        self.txt_input_zzz.setText(default_text_zzz)  # 设置默认值
+        self.txt_input_zzz.setReadOnly(True)
         icon_data = base64.b64decode(base64a.cz)  # 使用cz解码base64
         pixmap_cz = QPixmap()
         pixmap_cz.loadFromData(icon_data)  # 从数据加载Pixmap
@@ -139,16 +139,14 @@ class sz(QWidget):
         config = configparser.ConfigParser()
         config.read('start_config.ini')
         default_text_bh3 = config.get('DEFAULT', 'bh3_ml')
-        txt_input_bh3 = QLineEdit(self)
-        txt_input_bh3.setGeometry(100, 440, 380, 30)  # 设置文本框的位置和大小
-        txt_input_bh3.setText(default_text_bh3)  # 设置默认值
-        txt_input_bh3.setReadOnly(True)
+        self.txt_input_bh3 = QLineEdit(self)
+        self.txt_input_bh3.setGeometry(100, 440, 380, 30)  # 设置文本框的位置和大小
+        self.txt_input_bh3.setText(default_text_bh3)  # 设置默认值
+        self.txt_input_bh3.setReadOnly(True)
         icon_data_cz = base64.b64decode(base64a.cz)  # 使用cz解码base64
         pixmap_cz = QPixmap()
         pixmap_cz.loadFromData(icon_data_cz)  # 从数据加载Pixmap
-        icon_data_bc = base64.b64decode(base64a.bc)  # 使用bc解码base64
-        pixmap_bc = QPixmap()
-        pixmap_bc.loadFromData(icon_data_bc)  # 从数据加载Pixmap
+
         # 创建按钮
         scaled_pixmap = pixmap_cz.scaled(110, 110, Qt.AspectRatioMode.KeepAspectRatio)
         self.chazhao_bh3 = QPushButton('', self)  # 注意，按钮的文字为空
@@ -164,12 +162,15 @@ class sz(QWidget):
         self.chazhao_bh3.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
 
         #保存按钮
+        icon_data_bc = base64.b64decode(base64a.bc)  # 使用bc解码base64
+        pixmap_bc = QPixmap()
+        pixmap_bc.loadFromData(icon_data_bc)  # 从数据加载Pixmap
         # 创建按钮
         scaled_pixmap = pixmap_bc.scaled(600, 220, Qt.AspectRatioMode.KeepAspectRatio)
         self.chazhao_bc = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_bc.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_bc.move(680, 550)
-        self.chazhao_bc.clicked.connect(self.button_click_zzz)
+        self.chazhao_bc.clicked.connect(self.restart)
         # 设置按钮的大小为图片的大小
         self.chazhao_bc.setIcon(QIcon(scaled_pixmap))
         self.chazhao_bc.setFixedSize(pixmap_bc.width(), pixmap_bc.height())
@@ -203,6 +204,8 @@ class sz(QWidget):
                 with open('start_config.ini', 'w') as configfile:
                     config.write(configfile)
 
+                self.txt_input_ys.setText(grandparent_directory)
+
 
 
         else:
@@ -231,6 +234,7 @@ class sz(QWidget):
                 # 打开文件并保存配置
                 with open('start_config.ini', 'w') as configfile:
                     config.write(configfile)
+                self.txt_input_xqtd.setText(grandparent_directory)
 
 
 
@@ -266,6 +270,7 @@ class sz(QWidget):
                     # 打开文件并保存配置
                     with open('start_config.ini', 'w') as configfile:
                         config.write(configfile)
+                    self.txt_input_ys.setText(grandparent_directory)
 
 
 
@@ -296,7 +301,11 @@ class sz(QWidget):
                 with open('start_config.ini', 'w') as configfile:
                     config.write(configfile)
 
-
+                self.txt_input_bh3.setText(grandparent_directory)
 
         else:
             print("用户取消选择")
+
+    def restart(self):
+        os.execv(sys.executable, ['python'] + sys.argv)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 窗口置顶

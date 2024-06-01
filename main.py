@@ -14,7 +14,6 @@ import os
 from base64a import bg
 
 app = QApplication([])
-
 base64_image = base64.b64decode(bg)
 config = configparser.ConfigParser()
 
@@ -83,18 +82,22 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 2:  # 第二个选项卡
-        with open('xqtd/config.ini', 'r') as file:
-            for line in file:
-                if 'game_dynamic_bg_name=' in line:
-                    game_dynamic_bg_name = line.split('=')[1].strip()
-                    break
+        if os.path.exists(xqtd_config):
+            with open(xqtd_config, 'r') as file:
+                for line in file:
+                    if 'game_dynamic_bg_name=' in line:
+                        game_dynamic_bg_name = line.split('=')[1].strip()
+                        break
 
             # 构建背景图像文件路径
-        bg = "bg/" + game_dynamic_bg_name
-
-        image_reader = QImageReader(bg)
-        image = image_reader.read()
-        pixmap = QPixmap.fromImage(image)
+            bg = xqtd_bg + '/' + game_dynamic_bg_name
+            image_reader = QImageReader(bg)
+            image = image_reader.read()
+            pixmap = QPixmap.fromImage(image)
+        else:
+            data = base64_image
+            pixmap = QPixmap()
+            pixmap.loadFromData(QByteArray(data))
 
         # 控制 QTabWidget 显示在适当位置
         tabs.resize(pixmap.width(), pixmap.height())
@@ -104,20 +107,24 @@ def on_tab_changed(index):
         palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
         tabs.setPalette(palette)
         tabs.setAutoFillBackground(True)
-    # 以此类推，你可以添加更多的条件以处理更多的选项卡
+
     elif index == 4:  # 第三个选项卡
-        with open('zzz/config.ini', 'r') as file:
-            for line in file:
-                if 'game_dynamic_bg_name=' in line:
-                    game_dynamic_bg_name = line.split('=')[1].strip()
-                    break
+        if os.path.exists(zzz_config):
+            with open(zzz_config, 'r') as file:
+                for line in file:
+                    if 'game_dynamic_bg_name=' in line:
+                        game_dynamic_bg_name = line.split('=')[1].strip()
+                        break
 
             # 构建背景图像文件路径
-        bg = "bg/" + game_dynamic_bg_name
-
-        image_reader = QImageReader(bg)
-        image = image_reader.read()
-        pixmap = QPixmap.fromImage(image)
+            bg = zzz_bg + '/' + game_dynamic_bg_name
+            image_reader = QImageReader(bg)
+            image = image_reader.read()
+            pixmap = QPixmap.fromImage(image)
+        else:
+            data = base64_image
+            pixmap = QPixmap()
+            pixmap.loadFromData(QByteArray(data))
 
         # 控制 QTabWidget 显示在适当位置
         tabs.resize(pixmap.width(), pixmap.height())
@@ -127,19 +134,24 @@ def on_tab_changed(index):
         palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
         tabs.setPalette(palette)
         tabs.setAutoFillBackground(True)
+
     elif index == 6:  # 第三个选项卡
-        with open('bh3/config.ini', 'r') as file:
-            for line in file:
-                if 'game_dynamic_bg_name=' in line:
-                    game_dynamic_bg_name = line.split('=')[1].strip()
-                    break
+        if os.path.exists(bh3_config):
+            with open(bh3_config, 'r') as file:
+                for line in file:
+                    if 'game_dynamic_bg_name=' in line:
+                        game_dynamic_bg_name = line.split('=')[1].strip()
+                        break
 
             # 构建背景图像文件路径
-        bg = "bg/" + game_dynamic_bg_name
-
-        image_reader = QImageReader(bg)
-        image = image_reader.read()
-        pixmap = QPixmap.fromImage(image)
+            bg = bh3_bg + '/' + game_dynamic_bg_name
+            image_reader = QImageReader(bg)
+            image = image_reader.read()
+            pixmap = QPixmap.fromImage(image)
+        else:
+            data = base64_image
+            pixmap = QPixmap()
+            pixmap.loadFromData(QByteArray(data))
 
         # 控制 QTabWidget 显示在适当位置
         tabs.resize(pixmap.width(), pixmap.height())
@@ -149,6 +161,7 @@ def on_tab_changed(index):
         palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
         tabs.setPalette(palette)
         tabs.setAutoFillBackground(True)
+
     elif index == 8:  # 第四个选项卡
         data = base64_image
         pixmap = QPixmap()
@@ -265,7 +278,7 @@ SZ = QPixmap("image/sz.png")
 sz = SZ.scaled(100, 100, Qt.AspectRatioMode.IgnoreAspectRatio)
 label5.setPixmap(sz)
 tab_bar.setTabButton(8, QTabBar.ButtonPosition.LeftSide, label5)
-
+tabs.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 tabs.currentChanged.connect(handle_current_changed)
 tabs.setTabPosition(QTabWidget.TabPosition.East)
 # 获取屏幕宽度和高度
