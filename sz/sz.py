@@ -241,9 +241,7 @@ class sz(QWidget):
         else:
             print("用户取消选择")
 
-        config.read('start_config.ini')
-        default_text_xqtd = config.get('DEFAULT', 'xqtd_ml')
-        print(default_text_xqtd)
+
 
 
     def button_click_zzz(self):
