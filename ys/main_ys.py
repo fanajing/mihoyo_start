@@ -16,17 +16,21 @@ ys_config = os.path.join(ys_ml, 'config.ini')
 ys_config = ys_config.replace('\\', '/')
 ys_bg=os.path.join(ys_ml,'bg')
 ys_bg = ys_bg.replace('\\', '/')
+xzlj = "https://fs-im-kefu.7moor-fs1.com/29397395/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1708161130394/PCGameSDK.dll"
+
+
+G = """cps=mihoyo
+channel=1
+"""
+B = """cps=bilibili
+channel=14
+"""
 
 
 class ys(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-
-        config = configparser.ConfigParser()
-        config.read('start_config.ini')
-        ys_ml = config.get('DEFAULT', 'ys_ml', fallback=None)  # 如果'ys_ml'不存在，返回None
-        ys_ml = ys_ml.strip('\'')  # 使用strip方法移除两边的单引号
 
         #官服
         icon_data_guan = base64.b64decode(base64a.guan1)  # 使用guan1解码base64
