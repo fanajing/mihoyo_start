@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QApplication, QTabWidget, QLabel, QTabBar
-from PyQt6.QtGui import QPixmap, QIcon,QImageReader, QGuiApplication, QPalette, QBrush
+from PyQt6.QtWidgets import QApplication, QTabWidget, QLabel, QTabBar,QMainWindow, QSystemTrayIcon, QMenu, QApplication
+from PyQt6.QtGui import QAction, QPixmap, QIcon,QImageReader, QGuiApplication, QPalette, QBrush
 from PyQt6.QtCore import Qt,QByteArray
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -13,7 +13,15 @@ import configparser
 import os
 from base64a import bg
 
+
+def minimize(self):
+    self.hide()  # 隐藏窗口
+    process.wait()
+    self.show()
+
 app = QApplication([])
+
+
 base64_image = base64.b64decode(bg)
 config = configparser.ConfigParser()
 
@@ -51,6 +59,7 @@ bh3_config = os.path.join(bh3_ml, 'config.ini')
 bh3_config = bh3_config.replace('\\', '/')
 bh3_bg=os.path.join(bh3_ml,'bg')
 bh3_bg = bh3_bg.replace('\\', '/')
+
 
 
 def on_tab_changed(index):

@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QTabWidget,QMessageBox, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout,QApplication, QFileDialog, QPushButton
 from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
 from PyQt6.QtCore import QTimer, Qt,QByteArray,QSize, QCoreApplication
+import threading  # 提供多线程编程支持
 import configparser
 import os
 import sys
@@ -122,6 +123,17 @@ class ys(QWidget):
         self.image_label.setGeometry(30, 210, 505, 285)
 
     def on_button_clicked(self):
+        exe =ys_ml + '/' + "Genshin Impact Game/YuanShen.exe"
+        exe= '"'+exe+'"'
 
-        pass
+        def run_exe():
+            print(exe)
+            os.system(exe)
+
+        self.window().showMinimized()
+        t = threading.Thread(target=run_exe)
+        t.start()  # 启动新线程
+
+
+
 
