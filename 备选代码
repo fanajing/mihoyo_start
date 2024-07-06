@@ -1,0 +1,9 @@
+
+
+启动专有启动器
+import subprocess
+# 定义软件路径和参数
+exe_path = "D:\Program Files\miHoYo Launcher\launcher.exe"
+parameters = "--game=bh3_cn"
+# 启动软件
+subprocess.run([exe_path, parameters], shell=True)

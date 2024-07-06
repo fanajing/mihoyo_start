@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton,QLineEdit
+from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton,QLineEdit, QMessageBox
 from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
 from PyQt6.QtCore import QTimer, Qt
@@ -161,6 +161,8 @@ class sz(QWidget):
         self.chazhao_bh3.setIcon(QIcon(pixmap_cz))
         self.chazhao_bh3.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
 
+
+
         #保存按钮
         icon_data_bc = base64.b64decode(base64a.bc)  # 使用bc解码base64
         pixmap_bc = QPixmap()
@@ -303,6 +305,7 @@ class sz(QWidget):
 
         else:
             print("用户取消选择")
+
 
     def restart(self):
         os.execv(sys.executable, ['python'] + sys.argv)
