@@ -31,33 +31,33 @@ start_open = config.get('DEFAULT', 'open')
 
 #原神
 ys_ml = config.get('DEFAULT', 'ys_ml')
-ys_config = os.path.join(ys_ml, 'config.ini')
+ys_config = os.path.join('config.ini')
 ys_config = ys_config.replace('\\', '/')
-ys_bg = os.path.join(ys_ml,'bg')
+ys_bg=os.path.join('bg/ys')
 ys_bg = ys_bg.replace('\\', '/')
 
 
 #星穹铁道
 xqtd_ml = config.get('DEFAULT', 'xqtd_ml')
-xqtd_config = os.path.join(xqtd_ml, 'config.ini')
+xqtd_config = os.path.join('config.ini')
 xqtd_config = xqtd_config.replace('\\', '/')
-xqtd_bg=os.path.join(xqtd_ml,'bg')
+xqtd_bg=os.path.join('bg/xqtd')
 xqtd_bg = xqtd_bg.replace('\\', '/')
 
 
 #绝区零
 zzz_ml = config.get('DEFAULT', 'zzz_ml')
-zzz_config = os.path.join(zzz_ml, 'config.ini')
+zzz_config = os.path.join('config.ini')
 zzz_config = zzz_config.replace('\\', '/')
-zzz_bg=os.path.join(zzz_ml,'bg')
+zzz_bg=os.path.join('bg/zzz')
 zzz_bg = zzz_bg.replace('\\', '/')
 
 
 #崩坏三
 bh3_ml = config.get('DEFAULT', 'bh3_ml')
-bh3_config = os.path.join(bh3_ml, 'config.ini')
+bh3_config = os.path.join('config.ini')
 bh3_config = bh3_config.replace('\\', '/')
-bh3_bg=os.path.join(bh3_ml,'bg')
+bh3_bg=os.path.join('bg/bh3')
 bh3_bg = bh3_bg.replace('\\', '/')
 
 
@@ -65,14 +65,8 @@ bh3_bg = bh3_bg.replace('\\', '/')
 def on_tab_changed(index):
     if index == 0:  # 第一个选项卡
         if os.path.exists(ys_config):
-            with open(ys_config, 'r') as file:
-                for line in file:
-                    if 'game_dynamic_bg_name=' in line:
-                        game_dynamic_bg_name = line.split('=')[1].strip()
-                        break
-
             # 构建背景图像文件路径
-            bg = ys_bg +'/'+ game_dynamic_bg_name
+            bg = ys_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -92,14 +86,7 @@ def on_tab_changed(index):
 
     elif index == 2:  # 第二个选项卡
         if os.path.exists(xqtd_config):
-            with open(xqtd_config, 'r') as file:
-                for line in file:
-                    if 'game_dynamic_bg_name=' in line:
-                        game_dynamic_bg_name = line.split('=')[1].strip()
-                        break
-
-            # 构建背景图像文件路径
-            bg = xqtd_bg + '/' + game_dynamic_bg_name
+            bg = xqtd_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -119,14 +106,7 @@ def on_tab_changed(index):
 
     elif index == 4:  # 第三个选项卡
         if os.path.exists(zzz_config):
-            with open(zzz_config, 'r') as file:
-                for line in file:
-                    if 'game_dynamic_bg_name=' in line:
-                        game_dynamic_bg_name = line.split('=')[1].strip()
-                        break
-
-            # 构建背景图像文件路径
-            bg = zzz_bg + '/' + game_dynamic_bg_name
+            bg = zzz_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -146,14 +126,7 @@ def on_tab_changed(index):
 
     elif index == 6:  # 第三个选项卡
         if os.path.exists(bh3_config):
-            with open(bh3_config, 'r') as file:
-                for line in file:
-                    if 'game_dynamic_bg_name=' in line:
-                        game_dynamic_bg_name = line.split('=')[1].strip()
-                        break
-
-            # 构建背景图像文件路径
-            bg = bh3_bg + '/' + game_dynamic_bg_name
+            bg = bh3_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -186,14 +159,7 @@ def on_tab_changed(index):
 
 
 if os.path.exists(ys_config):
-    with open(ys_config, 'r') as file:
-        for line in file:
-            if 'game_dynamic_bg_name=' in line:
-                game_dynamic_bg_name = line.split('=')[1].strip()
-                break
-
-    # 构建背景图像文件路径
-    bg = ys_bg +'/'+ game_dynamic_bg_name
+    bg = ys_bg + '/' + 'bg.png'
 
     image_reader = QImageReader(bg)
     image = image_reader.read()

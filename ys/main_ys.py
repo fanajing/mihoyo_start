@@ -13,9 +13,9 @@ base64_image = base64.b64decode(bg)
 config = configparser.ConfigParser()
 config.read('start_config.ini')
 ys_ml = config.get('DEFAULT', 'ys_ml')
-ys_config = os.path.join(ys_ml, 'config.ini')
+ys_config = os.path.join('config.ini')
 ys_config = ys_config.replace('\\', '/')
-ys_bg=os.path.join(ys_ml,'bg')
+ys_bg=os.path.join('bg/ys')
 ys_bg = ys_bg.replace('\\', '/')
 xzlj = "https://fs-im-kefu.7moor-fs1.com/29397395/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1708161130394/PCGameSDK.dll"
 
@@ -71,14 +71,10 @@ class ys(QWidget):
 
 
         if os.path.exists(ys_config):
-            with open(ys_config, 'r') as file:
-                for line in file:
-                    if 'game_dynamic_bg_name=' in line:
-                        game_dynamic_bg_name = line.split('=')[1].strip()
-                        break
+
 
             # 构建背景图像文件路径
-            bg = ys_bg + '/' + game_dynamic_bg_name
+            bg = ys_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
