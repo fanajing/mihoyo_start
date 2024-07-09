@@ -4,6 +4,9 @@ from PyQt6.QtCore import QTimer, Qt,QByteArray,QSize, QCoreApplication
 import threading  # 提供多线程编程支持
 import configparser
 import os
+import win32api
+import ctypes
+import subprocess
 import shutil
 import requests
 import sys
@@ -19,8 +22,8 @@ ys_config = 'config.ini'
 ys_bg = os.path.join('bg/ys')
 ys_bg = ys_bg.replace('\\', '/')
 xzlj = "https://fs-im-kefu.7moor-fs1.com/29397395/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1708161130394/PCGameSDK.dll"
-bfplugin = "../Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dll"
-gfplugin= "../Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dllx"
+bfplugin = ys_ml+"/Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dll"
+gfplugin= ys_ml+"/Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dllx"
 
 G = """cps=mihoyo
 channel=1
@@ -126,10 +129,9 @@ class ys(QWidget):
         self.image_label.setGeometry(30, 210, 505, 285)
 
     def on_button_clicked_guanfu(self):
-        # if not is_admin():
-        #     QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
-        #     return
-        # if os.path.exists(gfplugin):
+        if not is_admin():
+            QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
+            return
         with open(ys_config, 'w') as file:
             file.write(G)
             if os.path.exists(bfplugin):
@@ -139,17 +141,18 @@ class ys(QWidget):
         exe = '"' + exe + '"'
 
         def run_exe():
-            print(exe)
-            os.system(exe)
+            # print(exe)
+            # os.system(exe)
+            subprocess.Popen(exe)
 
         self.window().showMinimized()
         t = threading.Thread(target=run_exe)
         t.start()  # 启动新线程
 
     def on_button_clicked_bfu(self):
-        # if not is_admin():
-        #     QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
-        #     return
+        if not is_admin():
+            QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
+            return
         with open(ys_config, 'w') as file:
             file.write(B)
             if os.path.exists(bfplugin):
@@ -162,8 +165,9 @@ class ys(QWidget):
 
 
         def run_exe():
-            print(exe)
-            os.system(exe)
+            # print(bfplugin)
+            # os.system(exe)
+            subprocess.Popen(exe)
 
         self.window().showMinimized()
         t = threading.Thread(target=run_exe)
