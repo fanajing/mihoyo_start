@@ -4,6 +4,8 @@ from PyQt6.QtCore import QTimer, Qt,QByteArray,QSize, QCoreApplication
 import threading  # 提供多线程编程支持
 import configparser
 import os
+import shutil
+import requests
 import sys
 import base64
 import base64a
@@ -13,12 +15,12 @@ base64_image = base64.b64decode(bg)
 config = configparser.ConfigParser()
 config.read('start_config.ini')
 ys_ml = config.get('DEFAULT', 'ys_ml')
-ys_config = os.path.join('config.ini')
-ys_config = ys_config.replace('\\', '/')
-ys_bg=os.path.join('bg/ys')
+ys_config = 'config.ini'
+ys_bg = os.path.join('bg/ys')
 ys_bg = ys_bg.replace('\\', '/')
 xzlj = "https://fs-im-kefu.7moor-fs1.com/29397395/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/1708161130394/PCGameSDK.dll"
-
+bfplugin = "../Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dll"
+gfplugin= "../Genshin Impact Game/YuanShen_Data/Plugins/PCGameSDK.dllx"
 
 G = """cps=mihoyo
 channel=1
@@ -26,6 +28,11 @@ channel=1
 B = """cps=bilibili
 channel=14
 """
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 
 
 class ys(QWidget):
@@ -42,7 +49,7 @@ class ys(QWidget):
         self.guanfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.guanfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.guanfu.move(750, 600)
-        self.guanfu.clicked.connect(self.on_button_clicked)
+        self.guanfu.clicked.connect(self.on_button_clicked_guanfu)
         # 设置按钮的大小为图片的大小
         self.guanfu.setIcon(QIcon(scaled_pixmap))
         self.guanfu.setFixedSize(pixmap_guan.width(), pixmap_guan.height())
@@ -60,7 +67,7 @@ class ys(QWidget):
         self.bfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.bfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.bfu.move(950, 600)
-        self.bfu.clicked.connect(self.on_button_clicked)
+        self.bfu.clicked.connect(self.on_button_clicked_bfu)
         # 设置按钮的大小为图片的大小
         self.bfu.setIcon(QIcon(scaled_pixmap))
         self.bfu.setFixedSize(pixmap_b.width(), pixmap_b.height())
@@ -118,9 +125,41 @@ class ys(QWidget):
         self.image_label.setPixmap(pixmap)
         self.image_label.setGeometry(30, 210, 505, 285)
 
-    def on_button_clicked(self):
+    def on_button_clicked_guanfu(self):
+        # if not is_admin():
+        #     QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
+        #     return
+        # if os.path.exists(gfplugin):
+        with open(ys_config, 'w') as file:
+            file.write(G)
+            if os.path.exists(bfplugin):
+                os.remove(bfplugin)
+
+        exe = ys_ml + '/' + "Genshin Impact Game/YuanShen.exe"
+        exe = '"' + exe + '"'
+
+        def run_exe():
+            print(exe)
+            os.system(exe)
+
+        self.window().showMinimized()
+        t = threading.Thread(target=run_exe)
+        t.start()  # 启动新线程
+
+    def on_button_clicked_bfu(self):
+        # if not is_admin():
+        #     QMessageBox.critical(None, "错误", "请以管理员权限运行程序！")
+        #     return
+        with open(ys_config, 'w') as file:
+            file.write(B)
+            if os.path.exists(bfplugin):
+                os.remove(bfplugin)
+            else:
+                shutil.copyfile('PCGameSDK.dll', bfplugin)
+
         exe =ys_ml + '/' + "Genshin Impact Game/YuanShen.exe"
         exe= '"'+exe+'"'
+
 
         def run_exe():
             print(exe)

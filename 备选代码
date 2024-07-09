@@ -7,3 +7,66 @@ exe_path = "D:\Program Files\miHoYo Launcher\launcher.exe"
 parameters = "--game=bh3_cn"
 # 启动软件
 subprocess.run([exe_path, parameters], shell=True)
+
+
+import requests
+import os
+import subprocess
+from obs import ObsClient  # 确保已安装 obs-sdk-python
+
+class AutoUpdater:
+    def __init__(self, obs_access_key, obs_secret_key, obs_bucket_name, obs_endpoint):
+        self.obs_access_key = obs_access_key
+        self.obs_secret_key = obs_secret_key
+        self.obs_bucket_name = obs_bucket_name
+        self.obs_endpoint = obs_endpoint
+
+    def check_update(self):
+        # 从 OBS 获取最新版本的文件信息
+        obs_client = ObsClient(access_key_id=self.obs_access_key,
+                               secret_access_key=self.obs_secret_key,
+                               server=self.obs_endpoint)
+        try:
+            resp = obs_client.getObject(self.obs_bucket_name, "latest_version_info.txt")
+            latest_version = resp['Body'].read().decode('utf-8').strip()
+        except Exception as e:
+            print(f"获取最新版本信息时出错: {e}")
+            return
+
+        # 比较本地版本和最新版本
+        local_version = "1.0"  # 这里假设本地版本为 1.0，您需要从本地配置或文件中读取实际版本
+        if latest_version > local_version:
+            print("有新版本可用，开始更新...")
+            self.download_and_update()
+        else:
+            print("您的软件已经是最新版本")
+
+    def download_and_update(self):
+        # 从 OBS 下载最新的代码文件
+        obs_client = ObsClient(access_key_id=self.obs_access_key,
+                               secret_access_key=self.obs_secret_key,
+                               server=self.obs_endpoint)
+        try:
+            obs_client.getObject(self.obs_bucket_name, "latest_code.py", "new_code.py")
+        except Exception as e:
+            print(f"下载最新代码时出错: {e}")
+            return
+
+        # 备份当前代码
+        os.rename("your_current_code.py", "your_current_code_backup.py")
+
+        # 替换当前代码为新下载的代码
+        os.rename("new_code.py", "your_current_code.py")
+
+        # 重新启动程序
+        subprocess.Popen(["python", "your_current_code.py"])
+
+if __name__ == "__main__":
+    # 替换为您在 OBS 中设置的实际信息
+    obs_access_key = "your_access_key"
+    obs_secret_key = "your_secret_key"
+    obs_bucket_name = "your_bucket_name"
+    obs_endpoint = "your_endpoint"
+
+    updater = AutoUpdater(obs_access_key, obs_secret_key, obs_bucket_name, obs_endpoint)
+    updater.check_update()

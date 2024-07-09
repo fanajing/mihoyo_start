@@ -253,7 +253,7 @@ SZ = QPixmap("image/sz.png")
 sz = SZ.scaled(100, 100, Qt.AspectRatioMode.IgnoreAspectRatio)
 label5.setPixmap(sz)
 tab_bar.setTabButton(8, QTabBar.ButtonPosition.LeftSide, label5)
-tabs.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+# tabs.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 tabs.currentChanged.connect(handle_current_changed)
 tabs.setTabPosition(QTabWidget.TabPosition.East)
 # 获取屏幕宽度和高度

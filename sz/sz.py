@@ -79,7 +79,7 @@ class sz(QWidget):
         self.chazhao_xqtd = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_xqtd.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_xqtd.move(420, 200)
-        self.chazhao_xqtd.clicked.connect(self.button_click_xqtd)
+        # self.chazhao_xqtd.clicked.connect(self.button_click_xqtd)
         # 设置按钮的大小为图片的大小
         self.chazhao_xqtd.setIcon(QIcon(scaled_pixmap))
         self.chazhao_xqtd.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -118,7 +118,7 @@ class sz(QWidget):
         self.chazhao_zzz = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_zzz.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_zzz.move(420, 300)
-        self.chazhao_zzz.clicked.connect(self.button_click_zzz)
+        # self.chazhao_zzz.clicked.connect(self.button_click_zzz)
         # 设置按钮的大小为图片的大小
         self.chazhao_zzz.setIcon(QIcon(scaled_pixmap))
         self.chazhao_zzz.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -152,7 +152,7 @@ class sz(QWidget):
         self.chazhao_bh3 = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_bh3.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_bh3.move(420, 400)
-        self.chazhao_bh3.clicked.connect(self.button_click_bh3)
+        # self.chazhao_bh3.clicked.connect(self.button_click_bh3)
         # 设置按钮的大小为图片的大小
         self.chazhao_bh3.setIcon(QIcon(scaled_pixmap))
         self.chazhao_bh3.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
