@@ -1,17 +1,30 @@
-from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton,QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton, QLineEdit, QMessageBox
 from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, QSize, QCoreApplication, pyqtSignal, QObject
 from PyQt6.QtCore import QByteArray
-from PyQt6.QtCore import QSize, QCoreApplication
 import configparser
 import os
+import threading
+import requests
 import sys
+import time
 import base64
 import base64a
 from base64a import bg
 base64_image = base64.b64decode(bg)
 
+class Downloader(QObject):
+    # 创建一个信号，在下载完成时发出
+    download_finished = pyqtSignal()
+
+    def download_file(self, url, save_path):
+        response = requests.get(url, stream=True)
+        with open(save_path, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    file.write(chunk)
+        self.download_finished.emit()  # 下载完成时发出信号
 class sz(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -20,6 +33,13 @@ class sz(QWidget):
         data = base64_image
         pixmap = QPixmap()
         pixmap.loadFromData(QByteArray(data))
+        # self.urls = [
+        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/ys/bg.png",
+        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
+        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
+        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"]
+        # self.directory = "bg"
+        # self.codes = ["ys", "xqtd", "bh3", "zzz"]  # 定义代号
 
 
         #原神
@@ -79,7 +99,7 @@ class sz(QWidget):
         self.chazhao_xqtd = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_xqtd.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_xqtd.move(420, 200)
-        # self.chazhao_xqtd.clicked.connect(self.button_click_xqtd)
+        self.chazhao_xqtd.clicked.connect(self.button_click_xqtd)
         # 设置按钮的大小为图片的大小
         self.chazhao_xqtd.setIcon(QIcon(scaled_pixmap))
         self.chazhao_xqtd.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -118,7 +138,7 @@ class sz(QWidget):
         self.chazhao_zzz = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_zzz.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_zzz.move(420, 300)
-        # self.chazhao_zzz.clicked.connect(self.button_click_zzz)
+        self.chazhao_zzz.clicked.connect(self.button_click_zzz)
         # 设置按钮的大小为图片的大小
         self.chazhao_zzz.setIcon(QIcon(scaled_pixmap))
         self.chazhao_zzz.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -152,7 +172,7 @@ class sz(QWidget):
         self.chazhao_bh3 = QPushButton('', self)  # 注意，按钮的文字为空
         self.chazhao_bh3.setStyleSheet(f"border:none;")  # 移除按钮的边框
         self.chazhao_bh3.move(420, 400)
-        # self.chazhao_bh3.clicked.connect(self.button_click_bh3)
+        self.chazhao_bh3.clicked.connect(self.button_click_bh3)
         # 设置按钮的大小为图片的大小
         self.chazhao_bh3.setIcon(QIcon(scaled_pixmap))
         self.chazhao_bh3.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -180,6 +200,23 @@ class sz(QWidget):
         # 将图标设置为按钮的背景
         self.chazhao_bc.setIcon(QIcon(pixmap_bc))
         self.chazhao_bc.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
+
+
+
+        # 更新按钮
+        scaled_pixmap = pixmap_cz.scaled(110, 110, Qt.AspectRatioMode.KeepAspectRatio)
+        self.chazhao_gx = QPushButton('', self)  # 注意，按钮的文字为空
+        self.chazhao_gx.setStyleSheet(f"border:none;")  # 移除按钮的边框
+        self.chazhao_gx.move(150, 500)
+        self.chazhao_gx.clicked.connect(self.button_click_gx)
+        # 设置按钮的大小为图片的大小
+        self.chazhao_gx.setIcon(QIcon(scaled_pixmap))
+        self.chazhao_gx.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
+
+        # 将图标设置为按钮的背景
+        self.chazhao_gx.setIcon(QIcon(pixmap_cz))
+        self.chazhao_gx.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
+
 
     def button_click_ys(self):
         # 首先创建 configparser.ConfigParser 实例
@@ -260,8 +297,8 @@ class sz(QWidget):
 
             if file_dialog.exec():  # 如果用户选择了
                 file_name = file_dialog.selectedFiles()[0]  # 获取选定文件的路径
-                if os.path.basename(file_name) != 'YuanShen.exe':
-                    QMessageBox.warning(self, "错误", "请选择YuanShen.exe")
+                if os.path.basename(file_name) != 'ZenlessZoneZero.exe':
+                    QMessageBox.warning(self, "错误", "请选择ZenlessZoneZero.exe")
                 else:
                     upper_directory = os.path.dirname(file_name)  # 获取文件的上一级目录
                     grandparent_directory = os.path.dirname(upper_directory)
@@ -306,6 +343,91 @@ class sz(QWidget):
         else:
             print("用户取消选择")
 
+    def button_click_gx(self):
+        config = configparser.ConfigParser()
+        config.read('start_config.ini')
+        default_text_ys = config.get('DEFAULT', 'ys_ml')
+        default_text_xqtd = config.get('DEFAULT', 'xqtd_ml')
+        default_text_bh3 = config.get('DEFAULT', 'bh3_ml')
+        default_text_zzz = config.get('DEFAULT', 'zzz_ml')
+        if default_text_ys is None:
+            print(" ")
+        else:
+            url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/ys/bg.png"  # 替换为实际下载文件的 URL
+            save_dir = os.path.join(os.getcwd(), "bg", "ys")
+            save_path = os.path.join(save_dir,"bg.png")  # 文件保存路径
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            def download_file():
+                response = requests.get(url, stream=True)
+                with open(save_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            file.write(chunk)
+                print("下载完成！")  # 下载完成后可以执行其他操作
+            # 创建并启动下载线程
+            threading.Thread(target=download_file).start()
+            QMessageBox.information(None, "背景信息", "原神背景图片加载完成！", QMessageBox.StandardButton.Ok)
+        if default_text_xqtd is None:
+            print(" ")
+        else:
+            url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png"  # 替换为实际下载文件的 URL
+            save_dir = os.path.join(os.getcwd(), "bg", "xqtd")
+            save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+
+            def download_file():
+                response = requests.get(url, stream=True)
+                with open(save_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            file.write(chunk)
+                print("下载完成！")  # 下载完成后可以执行其他操作
+
+            # 创建并启动下载线程
+            threading.Thread(target=download_file).start()
+            QMessageBox.information(None, "背景信息", "星穹铁道背景图片加载完成！", QMessageBox.StandardButton.Ok)
+        if default_text_bh3 is None:
+            print(" ")
+        else:
+            url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png"  # 替换为实际下载文件的 URL
+            save_dir = os.path.join(os.getcwd(), "bg", "bh3")
+            save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+
+            def download_file():
+                response = requests.get(url, stream=True)
+                with open(save_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            file.write(chunk)
+                print("下载完成！")  # 下载完成后可以执行其他操作
+
+            # 创建并启动下载线程
+            threading.Thread(target=download_file).start()
+            QMessageBox.information(None, "背景信息", "崩坏三背景图片加载完成！", QMessageBox.StandardButton.Ok)
+        if default_text_zzz is None:
+            print(" ")
+        else:
+            url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"  # 替换为实际下载文件的 URL
+            save_dir = os.path.join(os.getcwd(), "bg", "zzz")
+            save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+
+            def download_file():
+                response = requests.get(url, stream=True)
+                with open(save_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        if chunk:
+                            file.write(chunk)
+                print("下载完成！")  # 下载完成后可以执行其他操作
+
+            # 创建并启动下载线程
+            threading.Thread(target=download_file).start()
+            QMessageBox.information(None, "背景信息", "绝区零背景图片加载完成！", QMessageBox.StandardButton.Ok)
 
     def restart(self):
         os.execv(sys.executable, ['python'] + sys.argv)

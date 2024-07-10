@@ -1,5 +1,12 @@
 
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/ys/bg.png",
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"
 
+            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
+            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
+            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"
 启动专有启动器
 import subprocess
 # 定义软件路径和参数
@@ -70,3 +77,19 @@ if __name__ == "__main__":
 
     updater = AutoUpdater(obs_access_key, obs_secret_key, obs_bucket_name, obs_endpoint)
     updater.check_update()
+
+
+
+
+
+
+
+
+class sz(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+
+        //省略中间
+
+    def button_click_gx(self):

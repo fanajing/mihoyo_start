@@ -64,9 +64,9 @@ bh3_bg = bh3_bg.replace('\\', '/')
 
 def on_tab_changed(index):
     if index == 0:  # 第一个选项卡
-        if os.path.exists(ys_config):
+        bg = ys_bg + '/' + 'bg.png'
+        if os.path.exists(bg):
             # 构建背景图像文件路径
-            bg = ys_bg + '/' + 'bg.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -85,8 +85,8 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 2:  # 第二个选项卡
-        if os.path.exists(xqtd_config):
-            bg = xqtd_bg + '/' + 'bg.png'
+        bg = xqtd_bg + '/' + 'bg.png'
+        if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -105,8 +105,8 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 4:  # 第三个选项卡
-        if os.path.exists(zzz_config):
-            bg = zzz_bg + '/' + 'bg.png'
+        bg = zzz_bg + '/' + 'bg.png'
+        if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -125,8 +125,8 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 6:  # 第三个选项卡
-        if os.path.exists(bh3_config):
-            bg = bh3_bg + '/' + 'bg.png'
+        bg = bh3_bg + '/' + 'bg.png'
+        if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -157,10 +157,8 @@ def on_tab_changed(index):
         tabs.setPalette(palette)
         tabs.setAutoFillBackground(True)
 
-
-if os.path.exists(ys_config):
-    bg = ys_bg + '/' + 'bg.png'
-
+bg = ys_bg + '/' + 'bg.png'
+if os.path.exists(bg):
     image_reader = QImageReader(bg)
     image = image_reader.read()
     pixmap = QPixmap.fromImage(image)
