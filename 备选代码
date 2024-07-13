@@ -4,9 +4,10 @@
 "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
 "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"
 
-            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
-            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
-            "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
+"https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"
+
 启动专有启动器
 import subprocess
 # 定义软件路径和参数
