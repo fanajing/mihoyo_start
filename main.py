@@ -19,6 +19,7 @@ def minimize(self):
     process.wait()
     self.show()
 
+
 app = QApplication([])
 
 
@@ -59,7 +60,6 @@ bh3_config = os.path.join('config.ini')
 bh3_config = bh3_config.replace('\\', '/')
 bh3_bg=os.path.join('bg/bh3')
 bh3_bg = bh3_bg.replace('\\', '/')
-
 
 
 def on_tab_changed(index):

@@ -4,6 +4,7 @@ from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette,
 from PyQt6.QtCore import QTimer, Qt, QSize, QCoreApplication, pyqtSignal, QObject
 from PyQt6.QtCore import QByteArray
 import configparser
+import subprocess
 import os
 import threading
 import requests
@@ -51,14 +52,10 @@ class sz(QWidget):
         data = base64_image
         pixmap = QPixmap()
         pixmap.loadFromData(QByteArray(data))
-        # self.urls = [
-        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/ys/bg.png",
-        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png",
-        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png",
-        #     "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"]
-        # self.directory = "bg"
-        # self.codes = ["ys", "xqtd", "bh3", "zzz"]  # 定义代号
-
+        self.config = configparser.ConfigParser()
+        self.download_url = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/mihoyo_start.zip"
+        self.config_file_path = 'start_config.ini'
+        self.check_and_load_config()
 
         #原神
         # 添加图片
@@ -360,92 +357,38 @@ class sz(QWidget):
 
         else:
             print("用户取消选择")
+    def check_and_load_config(self):
+        try:
+            with open(self.config_file_path, 'r', encoding='utf-8') as f:
+                self.config.read_file(f)
+            # 如果配置文件中存在 version_id 则读取，否则默认设为 0
+            if self.config.has_section('OSS') and self.config.has_option('OSS', 'version_id'):
+                self.local_version_id = float(self.config.get('OSS', 'version_id'))
+        except (FileNotFoundError, UnicodeDecodeError, ValueError):
+            # 如果文件不存在、编码错误或值错误，设置本地版本ID为0
+            self.local_version_id = 0
 
-    # def button_click_gx(self):
-    #     config = configparser.ConfigParser()
-    #     config.read('start_config.ini')
-    #     default_text_ys = config.get('DEFAULT', 'ys_ml')
-    #     default_text_xqtd = config.get('DEFAULT', 'xqtd_ml')
-    #     default_text_bh3 = config.get('DEFAULT', 'bh3_ml')
-    #     default_text_zzz = config.get('DEFAULT', 'zzz_ml')
-    #     if default_text_ys is None:
-    #         print(" ")
-    #     else:
-    #         url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/ys/bg.png"  # 替换为实际下载文件的 URL
-    #         save_dir = os.path.join(os.getcwd(), "bg", "ys")
-    #         save_path = os.path.join(save_dir,"bg.png")  # 文件保存路径
-    #         if not os.path.exists(save_dir):
-    #             os.makedirs(save_dir)
-    #         def download_file():
-    #             response = requests.get(url, stream=True)
-    #             with open(save_path, 'wb') as file:
-    #                 for chunk in response.iter_content(chunk_size=8192):
-    #                     if chunk:
-    #                         file.write(chunk)
-    #             print("下载完成！")  # 下载完成后可以执行其他操作
-    #         # 创建并启动下载线程
-    #         threading.Thread(target=download_file).start()
-    #         QMessageBox.information(None, "背景信息", "原神背景图片开始加载！", QMessageBox.StandardButton.Ok)
-    #     if default_text_xqtd is None:
-    #         print(" ")
-    #     else:
-    #         url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/xqtd/bg.png"  # 替换为实际下载文件的 URL
-    #         save_dir = os.path.join(os.getcwd(), "bg", "xqtd")
-    #         save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
-    #         if not os.path.exists(save_dir):
-    #             os.makedirs(save_dir)
-    #
-    #         def download_file():
-    #             response = requests.get(url, stream=True)
-    #             with open(save_path, 'wb') as file:
-    #                 for chunk in response.iter_content(chunk_size=8192):
-    #                     if chunk:
-    #                         file.write(chunk)
-    #             print("下载完成！")  # 下载完成后可以执行其他操作
-    #
-    #         # 创建并启动下载线程
-    #         threading.Thread(target=download_file).start()
-    #         QMessageBox.information(None, "背景信息", "星穹铁道背景图片开始加载！", QMessageBox.StandardButton.Ok)
-    #     if default_text_bh3 is None:
-    #         print(" ")
-    #     else:
-    #         url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/bh3/bg.png"  # 替换为实际下载文件的 URL
-    #         save_dir = os.path.join(os.getcwd(), "bg", "bh3")
-    #         save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
-    #         if not os.path.exists(save_dir):
-    #             os.makedirs(save_dir)
-    #
-    #         def download_file():
-    #             response = requests.get(url, stream=True)
-    #             with open(save_path, 'wb') as file:
-    #                 for chunk in response.iter_content(chunk_size=8192):
-    #                     if chunk:
-    #                         file.write(chunk)
-    #             print("下载完成！")  # 下载完成后可以执行其他操作
-    #
-    #         # 创建并启动下载线程
-    #         threading.Thread(target=download_file).start()
-    #         QMessageBox.information(None, "背景信息", "崩坏三背景图片开始加载！", QMessageBox.StandardButton.Ok)
-    #     if default_text_zzz is None:
-    #         print(" ")
-    #     else:
-    #         url = "https://mihoyostart.obs.cn-north-4.myhuaweicloud.com/bg/zzz/bg.png"  # 替换为实际下载文件的 URL
-    #         save_dir = os.path.join(os.getcwd(), "bg", "zzz")
-    #         save_path = os.path.join(save_dir, "bg.png")  # 文件保存路径
-    #         if not os.path.exists(save_dir):
-    #             os.makedirs(save_dir)
-    #
-    #         def download_file():
-    #             response = requests.get(url, stream=True)
-    #             with open(save_path, 'wb') as file:
-    #                 for chunk in response.iter_content(chunk_size=8192):
-    #                     if chunk:
-    #                         file.write(chunk)
-    #             print("下载完成！")  # 下载完成后可以执行其他操作
-    #
-    #         # 创建并启动下载线程
-    #         threading.Thread(target=download_file).start()
-    #         QMessageBox.information(None, "背景信息", "绝区零背景图片开始加载！", QMessageBox.StandardButton.Ok)
+        self.check_for_update()
+
+    def check_for_update(self):
+        headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+        response = requests.head(self.download_url, headers=headers)
+        if 'x-oss-meta-id' in response.headers:
+            self.oss_meta_id = float(response.headers['x-oss-meta-id'])
+            print(f"获取到的 x-oss-meta-id: {self.oss_meta_id}")
+
+            if self.oss_meta_id > self.local_version_id:
+                print("有新版本，开始提示用户...")
+                update_prompt = QMessageBox.question(
+                    None,  # 父窗口，可以为 None
+                    "检测到新版本",
+                    f"最新版本为: V{self.oss_meta_id}\n是否前往更新?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                )
+                if update_prompt == QMessageBox.StandardButton.Yes:
+                    print("有新版本，打开下载程序...")
+                    subprocess.Popen("检查更新.exe")
+                    sys.exit()
 
 
     def restart(self):
