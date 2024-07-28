@@ -1,10 +1,15 @@
-from PyQt6.QtWidgets import QApplication, QFileDialog, QPushButton, QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QApplication, QFileDialog, QRadioButton, QPushButton, QLineEdit, QMessageBox
 from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QMessageBox, QVBoxLayout, QRadioButton, QTextEdit, QWidget, QPushButton
+from PyQt6.QtWidgets import QApplication, QDialog, QVBoxLayout, QRadioButton, QPushButton
 from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
 from PyQt6.QtCore import QTimer, Qt, QSize, QCoreApplication, pyqtSignal, QObject
 from PyQt6.QtCore import QByteArray
 import configparser
 import subprocess
+import requests
+from PyQt6.QtWidgets import QApplication, QDialog, QVBoxLayout, QRadioButton, QTextEdit, QPushButton, QHBoxLayout, QMainWindow, QWidget
+import sys
 import os
 import threading
 import requests
@@ -217,13 +222,13 @@ class sz(QWidget):
         self.chazhao_bc.setIconSize(QSize(scaled_pixmap.width(), scaled_pixmap.height()))  # 设置icon的大小
 
 
-
+        #
         # # 更新按钮
         # scaled_pixmap = pixmap_cz.scaled(110, 110, Qt.AspectRatioMode.KeepAspectRatio)
         # self.chazhao_gx = QPushButton('', self)  # 注意，按钮的文字为空
         # self.chazhao_gx.setStyleSheet(f"border:none;")  # 移除按钮的边框
         # self.chazhao_gx.move(150, 500)
-        # self.chazhao_gx.clicked.connect(self.button_click_gx)
+        # self.chazhao_gx.clicked.connect(self.show_message_box)
         # # 设置按钮的大小为图片的大小
         # self.chazhao_gx.setIcon(QIcon(scaled_pixmap))
         # self.chazhao_gx.setFixedSize(pixmap_cz.width(), pixmap_cz.height())
@@ -390,7 +395,71 @@ class sz(QWidget):
                     subprocess.Popen("检查更新.exe")
                     sys.exit()
 
-
+    # https://wj.qq.com/s2/15022705/76fe/
+    # def submit_to_tencent_form(self,feedback_type, content):
+    #     """
+    #     提交反馈到腾讯表单
+    #     """
+    #     url = 'https://wj.qq.com/s2/15022705/76fe/'  # 替换为你的腾讯表单提交链接
+    #
+    #     # 替换为实际的表单字段ID和用户提供的数据
+    #     data = {
+    #         'q-2-RXsj': {'value': feedback_type}, # 替换为实际的表单字段ID
+    #         'q-3-i9ta': {'value': content}
+    #     }
+    #     try:
+    #         response = requests.post(url, json=data)  # 使用 json 参数而不是 data，这取决于服务器的要求
+    #         if response.status_code == 200:
+    #             print("反馈提交成功！")
+    #         else:
+    #             print("提交失败，状态码：", response.status_code)
+    #     except requests.RequestException as e:
+    #         print("提交失败：", e)
+    #
+    # def show_message_box(self):
+    #     """
+    #     显示一个消息弹窗，并带有两个单选按钮和一个大的文本框。
+    #     """
+    #     dialog = QDialog()
+    #     dialog.setWindowTitle("反馈或建议")
+    #
+    #     # 创建单选按钮和文本框并设置布局
+    #     layout = QVBoxLayout()
+    #
+    #     radio_feedback = QRadioButton("问题反馈")
+    #     radio_suggestion = QRadioButton("更新建议")
+    #     text_edit = QTextEdit()
+    #     text_edit.setFixedHeight(200)
+    #
+    #     layout.addWidget(radio_feedback)
+    #     layout.addWidget(radio_suggestion)
+    #     layout.addWidget(text_edit)
+    #
+    #     # 创建确定和取消按钮
+    #     button_layout = QHBoxLayout()
+    #     ok_button = QPushButton("确定")
+    #     cancel_button = QPushButton("取消")
+    #
+    #     # 将按钮与槽函数连接
+    #     def on_ok_clicked():
+    #         feedback_type = "问题反馈" if radio_feedback.isChecked() else "更新建议"
+    #         content = text_edit.toPlainText()
+    #         self.submit_to_tencent_form(feedback_type, content)
+    #         dialog.accept()
+    #
+    #     ok_button.clicked.connect(on_ok_clicked)
+    #     cancel_button.clicked.connect(dialog.reject)
+    #
+    #     # 将按钮添加到水平布局
+    #     button_layout.addWidget(ok_button)
+    #     button_layout.addWidget(cancel_button)
+    #
+    #     # 将水平布局添加到垂直布局的底部
+    #     layout.addLayout(button_layout)
+    #
+    #     dialog.setLayout(layout)
+    #
+    #     dialog.exec()
     def restart(self):
         os.execv(sys.executable, ['python'] + sys.argv)
         self.setWindowFlags(Qt.WindowStaysOnTopHint)  # 窗口置顶
