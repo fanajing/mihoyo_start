@@ -1,3 +1,4 @@
+
 from PyQt6.QtWidgets import QApplication, QFileDialog, QRadioButton, QPushButton, QLineEdit, QMessageBox
 from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt6.QtWidgets import QApplication, QMessageBox, QVBoxLayout, QRadioButton, QTextEdit, QWidget, QPushButton
@@ -59,8 +60,20 @@ class sz(QWidget):
         pixmap.loadFromData(QByteArray(data))
         self.config = configparser.ConfigParser()
         self.download_url = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/mihoyo_start.zip"
+        self.download_ysurl = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/bz/ys.png"
+        self.download_xturl = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/bz/xt.png"
+        self.download_b3url = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/bz/b3.png"
+        self.download_zzzurl = "https://mihoyostart.oss-cn-beijing.aliyuncs.com/bz/zzz.png"
+
+        # self.bg_urls = {
+        #     'bg_1': "https://mihoyostart.oss-cn-beijing.aliyuncs.com/bz/ys.png",
+        #     'bg_2': "https://example.com/bg_2.zip",
+        #     'bg_3': "https://example.com/bg_3.zip",
+        #     'bg_4': "https://example.com/bg_4.zip"
+        # }
         self.config_file_path = 'start_config.ini'
         self.check_and_load_config()
+
 
         #原神
         # 添加图片
@@ -369,31 +382,119 @@ class sz(QWidget):
             # 如果配置文件中存在 version_id 则读取，否则默认设为 0
             if self.config.has_section('OSS') and self.config.has_option('OSS', 'version_id'):
                 self.local_version_id = float(self.config.get('OSS', 'version_id'))
+            if self.config.has_section('OSS') and self.config.has_option('OSS', 'bz_ys'):
+                self.local_bz_ys = float(self.config.get('OSS', 'bz_ys'))
+            if self.config.has_section('OSS') and self.config.has_option('OSS', 'bz_xt'):
+                self.local_bz_xt = float(self.config.get('OSS', 'bz_xt'))
+            if self.config.has_section('OSS') and self.config.has_option('OSS', 'bz_b3'):
+                self.local_bz_b3 = float(self.config.get('OSS', 'bz_b3'))
+            if self.config.has_section('OSS') and self.config.has_option('OSS', 'bz_zzz'):
+                self.local_bz_zzz = float(self.config.get('OSS', 'bz_zzz'))
         except (FileNotFoundError, UnicodeDecodeError, ValueError):
             # 如果文件不存在、编码错误或值错误，设置本地版本ID为0
             self.local_version_id = 0
+            self.local_bz_ys = 0
+            self.local_bz_xt = 0
+            self.local_bz_b3 = 0
+            self.local_bz_zzz = 0
 
         self.check_for_update()
+        self.check_for_ysdate()
+        self.check_for_xtdate()
+        self.check_for_b3date()
+        self.check_for_zzzdate()
+
+
 
     def check_for_update(self):
-        headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
-        response = requests.head(self.download_url, headers=headers)
-        if 'x-oss-meta-id' in response.headers:
-            self.oss_meta_id = float(response.headers['x-oss-meta-id'])
-            print(f"获取到的 x-oss-meta-id: {self.oss_meta_id}")
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_url, headers=headers)
+            print(response)
+            # for key, url in self.bg_urls.items():
+            #     try:
+            #         response = requests.head(url, headers=headers)
+            #         print(f"{key} response: {response}")
+            #
+            #         oss_meta_key = f'x-oss-meta-{key}'
+            #         if oss_meta_key in response.headers:
+            #             print(f"获取到的 {oss_meta_key}: {response.headers[oss_meta_key]}")
+            #
+            #
+            #             if not self.check_bg_param(key,response.headers[oss_meta_key]):
+            #                 if key == 'bg_1':
+            #                     bg_1()
+            #                 elif key == 'bg_2':
+            #                     bg_2()
+            #                 elif key == 'bg_3':
+            #                     bg_3()
+            #                 elif key == 'bg_4':
+            #                     bg_4()
+            #     except requests.ConnectionError:
+            #         print(f"网络连接错误，无法检查 {key} 的更新，跳过更新检查。")
+            if 'x-oss-meta-id' in response.headers:
+                self.oss_meta_id = float(response.headers['x-oss-meta-id'])
+                print(f"获取到的 x-oss-meta-id: {self.oss_meta_id}")
 
-            if self.oss_meta_id > self.local_version_id:
-                print("有新版本，开始提示用户...")
-                update_prompt = QMessageBox.question(
-                    None,  # 父窗口，可以为 None
-                    "检测到新版本",
-                    f"最新版本为: V{self.oss_meta_id}\n是否前往更新?",
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-                )
-                if update_prompt == QMessageBox.StandardButton.Yes:
-                    print("有新版本，打开下载程序...")
-                    subprocess.Popen("检查更新.exe")
-                    sys.exit()
+                if self.oss_meta_id > self.local_version_id:
+                    print("有新版本，开始提示用户...")
+                    update_prompt = QMessageBox.question(
+                        None,  # 父窗口，可以为 None
+                        "检测到新版本",
+                        f"最新版本为: V{self.oss_meta_id}\n是否前往更新?",
+                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                    )
+                    if update_prompt == QMessageBox.StandardButton.Yes:
+                        print("有新版本，打开下载程序...")
+                        subprocess.Popen("检查更新.exe")
+                        sys.exit()
+        except requests.ConnectionError:
+            print("网络连接错误，无法检查更新，跳过更新检查。")
+
+    def check_for_ysdate(self):
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_ysurl, headers=headers)
+            print(response)
+            self.oss_meta_ys = float(response.headers['x-oss-meta-ys'])
+            print(f"获取到的 x-oss-meta-ys: {self.oss_meta_ys}")
+            # if self.oss_meta_ys > self.local_version_ys:
+
+
+        except requests.ConnectionError:
+            print("网络连接错误，无法检查更新，跳过更新检查。")
+    def check_for_xtdate(self):
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_xturl, headers=headers)
+            print(response)
+            self.oss_meta_xt = float(response.headers['x-oss-meta-xt'])
+            print(f"获取到的 x-oss-meta-xt: {self.oss_meta_xt}")
+
+        except requests.ConnectionError:
+            print("网络连接错误，无法检查更新，跳过更新检查。")
+
+    def check_for_b3date(self):
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_b3url, headers=headers)
+            print(response)
+            self.oss_meta_b3 = float(response.headers['x-oss-meta-b3'])
+            print(f"获取到的 x-oss-meta-b3: {self.oss_meta_b3}")
+
+        except requests.ConnectionError:
+            print("网络连接错误，无法检查更新，跳过更新检查。")
+
+    def check_for_zzzdate(self):
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_zzzurl, headers=headers)
+            print(response)
+            self.oss_meta_zzz = float(response.headers['x-oss-meta-zzz'])
+            print(f"获取到的 x-oss-meta-zzz: {self.oss_meta_zzz}")
+
+        except requests.ConnectionError:
+            print("网络连接错误，无法检查更新，跳过更新检查。")
 
     # https://wj.qq.com/s2/15022705/76fe/
     # def submit_to_tencent_form(self,feedback_type, content):

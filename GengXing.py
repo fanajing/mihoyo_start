@@ -42,31 +42,38 @@ class DownloadApp:
         self.check_for_update()
 
     def check_for_update(self):
-        headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
-        response = requests.head(self.download_url, headers=headers)
-        if 'x-oss-meta-id' in response.headers:
-            self.oss_meta_id = float(response.headers['x-oss-meta-id'])
-            print(f"获取到的 x-oss-meta-id: {self.oss_meta_id}")
+        try:
+            headers = {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
+            response = requests.head(self.download_url, headers=headers)
+            if 'x-oss-meta-id' in response.headers:
+                self.oss_meta_id = float(response.headers['x-oss-meta-id'])
+                print(f"获取到的 x-oss-meta-id: {self.oss_meta_id}")
 
-            if self.oss_meta_id > self.local_version_id:
-                print("有新版本，开始提示用户...")
-                update_prompt = messagebox.askyesno(
-                    "检测到新版本",
-                    f"当前版本为: V{self.local_version_id}\n最新版本为: V{self.oss_meta_id}\n是否更新?"
-                )
+                if self.oss_meta_id > self.local_version_id:
+                    print("有新版本，开始提示用户...")
+                    update_prompt = messagebox.askyesno(
+                        "检测到新版本",
+                        f"当前版本为: V{self.local_version_id}\n最新版本为: V{self.oss_meta_id}\n是否更新?"
+                    )
 
-                if update_prompt:
-                    print("有新版本，开始下载...")
-                    self.start_download_thread()
+                    if update_prompt:
+                        print("有新版本，开始下载...")
+                        self.start_download_thread()
+                    else:
+                        self.master.quit()
+                        self.master.destroy()
                 else:
+                    messagebox.showinfo("更新", f"当前是最新版本，版本号为：v{self.oss_meta_id}")
                     self.master.quit()
                     self.master.destroy()
             else:
-                messagebox.showinfo("更新", f"当前是最新版本，版本号为：v{self.oss_meta_id}")
+                messagebox.showwarning("错误", "未找到版本文件")
                 self.master.quit()
                 self.master.destroy()
-        else:
-            messagebox.showwarning("错误", "未找到版本文件")
+
+        except requests.RequestException:
+        # 无网络状态下直接启动主程序
+            print("无网络连接，直接启动程序")
             self.master.quit()
             self.master.destroy()
 

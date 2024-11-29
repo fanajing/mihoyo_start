@@ -85,7 +85,7 @@ class zzz(QWidget):
 
 
             # 构建背景图像文件路径
-            bg = zzz_bg + '/' + 'bg.png'
+            bg = zzz_bg + '/' + 'zzz.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)

@@ -84,7 +84,7 @@ class ys(QWidget):
 
 
             # 构建背景图像文件路径
-            bg = ys_bg + '/' + 'bg.png'
+            bg = ys_bg + '/' + 'ys.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
@@ -102,7 +102,9 @@ class ys(QWidget):
         palette.setBrush(QPalette.ColorRole.Window, QBrush(pixmap))
         self.setPalette(palette)
         self.setAutoFillBackground(True)
-        image_folder='ScreenShot'
+        image_folder=ys_ml+'/Genshin Impact Game/'+'ScreenShot'
+        if not os.path.exists(image_folder):
+            os.makedirs(image_folder)
         self.images = [
             os.path.join(image_folder, img)
             for img in os.listdir(image_folder)

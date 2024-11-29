@@ -85,7 +85,7 @@ class xqtd(QWidget):
 
 
             # 构建背景图像文件路径
-            bg = xqtd_bg + '/' + 'bg.png'
+            bg = xqtd_bg + '/' + 'xt.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
             pixmap = QPixmap.fromImage(image)
