@@ -1,4 +1,4 @@
-
+from bgxz import download_ys, download_xt, download_b3, download_zzz
 from PyQt6.QtWidgets import QApplication, QFileDialog, QRadioButton, QPushButton, QLineEdit, QMessageBox
 from PyQt6.QtWidgets import QTabWidget, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt6.QtWidgets import QApplication, QMessageBox, QVBoxLayout, QRadioButton, QTextEdit, QWidget, QPushButton
@@ -459,7 +459,18 @@ class sz(QWidget):
             self.oss_meta_ys = float(response.headers['x-oss-meta-ys'])
             print(f"获取到的 x-oss-meta-ys: {self.oss_meta_ys}")
             # if self.oss_meta_ys > self.local_version_ys:
+            if self.oss_meta_ys > self.local_bz_ys:
+                print("有新版本，打开下载程序...")
+                download_ys()
+            else:
+                print("版本正常")
 
+            if not self.config.has_section('OSS'):
+                self.config.add_section('OSS')
+            self.config.set('OSS', 'bz_ys', str(self.oss_meta_ys))
+
+            with open(self.config_file_path, 'w', encoding='utf-8') as configfile:
+                self.config.write(configfile)
 
         except requests.ConnectionError:
             print("网络连接错误，无法检查更新，跳过更新检查。")
@@ -470,6 +481,17 @@ class sz(QWidget):
             print(response)
             self.oss_meta_xt = float(response.headers['x-oss-meta-xt'])
             print(f"获取到的 x-oss-meta-xt: {self.oss_meta_xt}")
+            if self.oss_meta_xt > self.local_bz_xt:
+                print("有新版本，打开下载程序...")
+                download_xt()
+                self.config.set('OSS', 'bz_xt', str(self.oss_meta_xt))
+                with open(self.config_file_path, 'w', encoding='utf-8') as configfile:
+                    self.config.write(configfile)
+                print("写入成功")
+            else:
+                print("版本正常")
+
+
 
         except requests.ConnectionError:
             print("网络连接错误，无法检查更新，跳过更新检查。")
@@ -481,7 +503,16 @@ class sz(QWidget):
             print(response)
             self.oss_meta_b3 = float(response.headers['x-oss-meta-b3'])
             print(f"获取到的 x-oss-meta-b3: {self.oss_meta_b3}")
-
+            if self.oss_meta_b3 > self.local_bz_b3:
+                print("有新版本，打开下载程序...")
+                download_b3()
+            else:
+                print("版本正常")
+            if not self.config.has_section('OSS'):
+                self.config.add_section('OSS')
+            self.config.set('OSS', 'bz_b3', str(self.oss_meta_b3))
+            with open(self.config_file_path, 'w', encoding='utf-8') as configfile:
+                self.config.write(configfile)
         except requests.ConnectionError:
             print("网络连接错误，无法检查更新，跳过更新检查。")
 
@@ -492,7 +523,16 @@ class sz(QWidget):
             print(response)
             self.oss_meta_zzz = float(response.headers['x-oss-meta-zzz'])
             print(f"获取到的 x-oss-meta-zzz: {self.oss_meta_zzz}")
-
+            if self.oss_meta_zzz > self.local_bz_zzz:
+                print("有新版本，打开下载程序...")
+                download_zzz()
+            else:
+                print("版本正常")
+            if not self.config.has_section('OSS'):
+                self.config.add_section('OSS')
+            self.config.set('OSS', 'bz_zzz', str(self.oss_meta_zzz))
+            with open(self.config_file_path, 'w', encoding='utf-8') as configfile:
+                self.config.write(configfile)
         except requests.ConnectionError:
             print("网络连接错误，无法检查更新，跳过更新检查。")
 

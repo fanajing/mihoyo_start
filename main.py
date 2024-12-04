@@ -64,7 +64,7 @@ bh3_bg = bh3_bg.replace('\\', '/')
 
 def on_tab_changed(index):
     if index == 0:  # 第一个选项卡
-        bg = ys_bg + '/' + 'bg.png'
+        bg = ys_bg + '/' + 'ys.png'
         if os.path.exists(bg):
             # 构建背景图像文件路径
             image_reader = QImageReader(bg)
@@ -85,7 +85,7 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 2:  # 第二个选项卡
-        bg = xqtd_bg + '/' + 'bg.png'
+        bg = xqtd_bg + '/' + 'xt.png'
         if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()
@@ -105,7 +105,7 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 4:  # 第三个选项卡
-        bg = zzz_bg + '/' + 'bg.png'
+        bg = zzz_bg + '/' + 'zzz.png'
         if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()
@@ -125,7 +125,7 @@ def on_tab_changed(index):
         tabs.setAutoFillBackground(True)
 
     elif index == 6:  # 第三个选项卡
-        bg = bh3_bg + '/' + 'bg.png'
+        bg = bh3_bg + '/' + 'b3.png'
         if os.path.exists(bg):
             image_reader = QImageReader(bg)
             image = image_reader.read()

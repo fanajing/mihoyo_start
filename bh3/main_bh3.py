@@ -52,7 +52,7 @@ class bh3(QWidget):
         scaled_pixmap = pixmap_guan.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
         self.guanfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.guanfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
-        self.guanfu.move(750, 600)
+        self.guanfu.move(150, 500)
         self.guanfu.clicked.connect(self.on_button_clicked_guanfu)
         # 设置按钮的大小为图片的大小
         self.guanfu.setIcon(QIcon(scaled_pixmap))
@@ -70,7 +70,7 @@ class bh3(QWidget):
         scaled_pixmap = pixmap_b.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
         self.bfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.bfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
-        self.bfu.move(950, 600)
+        self.bfu.move(150, 600)
         self.bfu.clicked.connect(self.on_button_clicked_bfu)
         # 设置按钮的大小为图片的大小
         self.bfu.setIcon(QIcon(scaled_pixmap))
@@ -121,13 +121,13 @@ class bh3(QWidget):
         self.timer = QTimer(self)
         self.timer.setInterval(3000)
         self.timer.start()
-        self.timer.timeout.connect(self.next_image)
+        # self.timer.timeout.connect(self.next_image)
 
-    def next_image(self):
-        self.current_image = (self.current_image + 1) % len(self.images)
-        pixmap = QPixmap(self.images[self.current_image]).scaled(505,285)
-        self.image_label.setPixmap(pixmap)
-        self.image_label.setGeometry(30, 210, 505, 285)
+    # def next_image(self):
+    #     self.current_image = (self.current_image + 1) % len(self.images)
+    #     pixmap = QPixmap(self.images[self.current_image]).scaled(505,285)
+    #     self.image_label.setPixmap(pixmap)
+    #     self.image_label.setGeometry(30, 400, 505, 285)
 
     def on_button_clicked_guanfu(self):
         if not is_admin():
