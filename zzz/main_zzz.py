@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QTabWidget,QMessageBox, QTabBar, QWidget, QVBoxLayout, QLabel, QHBoxLayout,QApplication, QFileDialog, QPushButton
-from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush
+from PyQt6.QtGui import QPixmap, QIcon, QImageReader, QGuiApplication, QPalette, QBrush, QImage, QPainter
 from PyQt6.QtCore import QTimer, Qt,QByteArray,QSize, QCoreApplication
 import threading  # 提供多线程编程支持
 import configparser
@@ -52,7 +52,7 @@ class zzz(QWidget):
         scaled_pixmap = pixmap_guan.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
         self.guanfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.guanfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
-        self.guanfu.move(150, 500)
+        self.guanfu.move(700, 600)
         self.guanfu.clicked.connect(self.on_button_clicked_guanfu)
         # 设置按钮的大小为图片的大小
         self.guanfu.setIcon(QIcon(scaled_pixmap))
@@ -70,7 +70,7 @@ class zzz(QWidget):
         scaled_pixmap = pixmap_b.scaled(160, 200, Qt.AspectRatioMode.KeepAspectRatio)
         self.bfu = QPushButton('', self)  # 注意，按钮的文字为空
         self.bfu.setStyleSheet(f"border:none;")  # 移除按钮的边框
-        self.bfu.move(150, 600)
+        self.bfu.move(900, 600)
         self.bfu.clicked.connect(self.on_button_clicked_bfu)
         # 设置按钮的大小为图片的大小
         self.bfu.setIcon(QIcon(scaled_pixmap))
@@ -88,7 +88,17 @@ class zzz(QWidget):
             bg = zzz_bg + '/' + 'zzz.png'
             image_reader = QImageReader(bg)
             image = image_reader.read()
-            pixmap = QPixmap.fromImage(image)
+            cropped_pixmap = QPixmap(image.width() - 107, image.height())
+            cropped_pixmap.fill(Qt.GlobalColor.transparent)
+
+            # 将QImage转换为QPixmap
+            source_pixmap = QPixmap.fromImage(image)
+            painter = QPainter(cropped_pixmap)
+            # 修改此处调用，传入的都是QPixmap类型相关参数
+            painter.drawPixmap(0, 0, source_pixmap, 107, 0, image.width() - 107, image.height())
+            painter.end()
+
+            pixmap = cropped_pixmap
         else:
             data = base64_image
             pixmap = QPixmap()

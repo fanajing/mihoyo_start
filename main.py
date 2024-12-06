@@ -215,7 +215,7 @@ tabs.setAutoFillBackground(True)
 tabs.setFixedSize(pixmap.width(), pixmap.height())
 
 tab_bar = tabs.tabBar()
-tabs.setStyleSheet("QTabWidget::pane { border: 0; } QTabBar::tab {background-color: rgba(0,0,0,30%);}")
+tabs.setStyleSheet("QTabWidget::pane { border: 0; } QTabBar::tab {background-color: rgba(0,0,0,10%);}")
 
 #原神
 label1 = QLabel()
@@ -253,7 +253,7 @@ label5.setPixmap(sz)
 tab_bar.setTabButton(8, QTabBar.ButtonPosition.LeftSide, label5)
 # tabs.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 tabs.currentChanged.connect(handle_current_changed)
-tabs.setTabPosition(QTabWidget.TabPosition.East)
+tabs.setTabPosition(QTabWidget.TabPosition.West)
 # 获取屏幕宽度和高度
 screen = app.primaryScreen().geometry()
 # 设置窗口的位置和大小，使其居中
